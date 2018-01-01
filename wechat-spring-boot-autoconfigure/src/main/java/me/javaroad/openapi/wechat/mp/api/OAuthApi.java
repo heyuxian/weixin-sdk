@@ -3,7 +3,7 @@ package me.javaroad.openapi.wechat.mp.api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.javaroad.openapi.wechat.mp.config.WeChatMpProperties;
-import me.javaroad.openapi.wechat.mp.model.response.AccessTokenResponse;
+import me.javaroad.openapi.wechat.mp.model.AccessTokenResponse;
 import me.javaroad.openapi.wechat.utils.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

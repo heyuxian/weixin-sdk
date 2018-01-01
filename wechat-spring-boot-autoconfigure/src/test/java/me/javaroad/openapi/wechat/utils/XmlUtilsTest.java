@@ -3,12 +3,20 @@ package me.javaroad.openapi.wechat.utils;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 import me.javaroad.openapi.wechat.mp.model.message.TextMessage;
+import me.javaroad.openapi.wechat.mp.model.message.TextResponseMessage;
 import org.junit.Test;
 
 /**
  * @author heyx
  */
 public class XmlUtilsTest {
+
+    @Test
+    public void xmlString() throws Exception {
+        TextResponseMessage responseMessage = new TextResponseMessage();
+        responseMessage.setContent("测试");
+        System.out.println(XmlUtils.xmlString(responseMessage));
+    }
 
     @Test
     public void parse() throws Exception {

@@ -9,13 +9,9 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public abstract class EventMessage extends BaseMessage {
-
-    @JacksonXmlProperty(localName = "MsgId")
-    private Long messageId;
-
+public class VoiceResponseMessage extends BaseResponseMessage {
+    @JacksonXmlProperty(localName = "MediaId")
+    private String mediaId;
     @JacksonXmlProperty(localName = "MsgType")
-    private MessageType messageType = MessageType.event;
-
-    public abstract Event getEvent();
+    private MessageType messageType = MessageType.voice;
 }

@@ -13,13 +13,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class WeChatMpProperties {
 
     private OAuth auth;
-    private Client client;
+    private Security security;
 
     @Getter
     @Setter
-    public static class Client {
-
+    public static class Security {
         private String token;
+        private String encodingAesKey;
     }
 
     @Getter
@@ -27,8 +27,8 @@ public class WeChatMpProperties {
     public static class OAuth {
 
         private String appid;
-        private String grantType = "client_credential";
         private String secret;
+        private String grantType = "client_credential";
         private String tokenUrl = "https://api.weixin.qq.com/cgi-bin/token";
 
         public String buildTokenUrl() {

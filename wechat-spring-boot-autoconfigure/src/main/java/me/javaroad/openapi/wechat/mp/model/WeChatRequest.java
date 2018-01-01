@@ -1,4 +1,4 @@
-package me.javaroad.openapi.wechat.mp.model.response;
+package me.javaroad.openapi.wechat.mp.model;
 
 import lombok.Getter;
 import lombok.Setter;

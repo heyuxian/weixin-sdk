@@ -9,14 +9,13 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class LinkMessage extends SimpleMessage {
-
+public class VideoResponseMessage extends BaseResponseMessage {
+    @JacksonXmlProperty(localName = "MediaId")
+    private String mediaId;
     @JacksonXmlProperty(localName = "Title")
     private String title;
     @JacksonXmlProperty(localName = "Description")
     private String description;
-    @JacksonXmlProperty(localName = "Url")
-    private String link;
     @JacksonXmlProperty(localName = "MsgType")
-    private MessageType messageType = MessageType.link;
+    private MessageType messageType = MessageType.video;
 }

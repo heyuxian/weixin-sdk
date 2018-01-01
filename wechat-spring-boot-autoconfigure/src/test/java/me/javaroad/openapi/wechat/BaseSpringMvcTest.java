@@ -10,6 +10,6 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
-public class BaseSpringMvcTest {
+public abstract class BaseSpringMvcTest {
 
 }

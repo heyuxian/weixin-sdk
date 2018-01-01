@@ -1,25 +1,16 @@
 package me.javaroad.openapi.wechat.mp.config;
 
+import static me.javaroad.openapi.wechat.mp.WeChatConstants.ENCRYPT_MESSAGE_PARAM;
+import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
+
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import me.javaroad.openapi.wechat.mp.model.message.BaseMessage;
-import me.javaroad.openapi.wechat.mp.model.message.CustomMenuEventMessage;
-import me.javaroad.openapi.wechat.mp.model.message.Event;
-import me.javaroad.openapi.wechat.mp.model.message.ImageMessage;
-import me.javaroad.openapi.wechat.mp.model.message.LinkMessage;
-import me.javaroad.openapi.wechat.mp.model.message.LocationEventMessage;
-import me.javaroad.openapi.wechat.mp.model.message.LocationMessage;
-import me.javaroad.openapi.wechat.mp.model.message.MessageType;
-import me.javaroad.openapi.wechat.mp.model.message.QrCodeEventMessage;
-import me.javaroad.openapi.wechat.mp.model.message.ShortVideoMessage;
-import me.javaroad.openapi.wechat.mp.model.message.SubscribeEventMessage;
-import me.javaroad.openapi.wechat.mp.model.message.TextMessage;
-import me.javaroad.openapi.wechat.mp.model.message.VideoMessage;
-import me.javaroad.openapi.wechat.mp.model.message.VoiceMessage;
+import me.javaroad.openapi.wechat.mp.model.message.EncryptMessage;
+import me.javaroad.openapi.wechat.utils.MessageUtils;
 import me.javaroad.openapi.wechat.utils.XmlUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -33,6 +24,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
+
+    @Autowired
+    private WeChatMpProperties mpProperties;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
@@ -58,65 +52,18 @@ public class WebConfig extends WebMvcConfigurerAdapter {
             while ((temp = buffer.readLine()) != null) {
                 builder.append(temp);
             }
-            String xmlStr = builder.toString();
-            String msgType = XmlUtils.readNode(xmlStr, "MsgType");
-            if (StringUtils.isBlank(msgType)) {
-                throw new IllegalArgumentException("invalid request param, xml=[" + xmlStr + "]");
+            String xmlMessageContent = builder.toString();
+            if (MessageUtils.isEncrypt(xmlMessageContent)) {
+                EncryptMessage encryptMessage = EncryptMessage.builder()
+                    .nonce(webRequest.getParameter("nonce"))
+                    .timestamp(Long.valueOf(webRequest.getParameter("timestamp")))
+                    .signature(webRequest.getParameter("msg_signature"))
+                    .encrypt(XmlUtils.readNode(builder.toString(), "Encrypt"))
+                    .build();
+                xmlMessageContent = MessageUtils.decryptMessage(encryptMessage, mpProperties);
+                webRequest.setAttribute(ENCRYPT_MESSAGE_PARAM, true, SCOPE_REQUEST);
             }
-            MessageType messageType = MessageType.valueOf(msgType);
-            return buildMessage(messageType, xmlStr);
-        }
-
-        private BaseMessage buildMessage(MessageType messageType, String xmlStr) throws IOException {
-            switch (messageType) {
-                case text:
-                    return XmlUtils.parse(xmlStr, TextMessage.class);
-                case link:
-                    return XmlUtils.parse(xmlStr, LinkMessage.class);
-                case video:
-                    return XmlUtils.parse(xmlStr, VideoMessage.class);
-                case shortvideo:
-                    return XmlUtils.parse(xmlStr, ShortVideoMessage.class);
-                case voice:
-                    return XmlUtils.parse(xmlStr, VoiceMessage.class);
-                case location:
-                    return XmlUtils.parse(xmlStr, LocationMessage.class);
-                case image:
-                    return XmlUtils.parse(xmlStr, ImageMessage.class);
-                case event:
-                    return buildEventMessage(xmlStr);
-                default:
-                    return null;
-            }
-        }
-
-        private BaseMessage buildEventMessage(String xmlStr) throws IOException {
-            String eventStr = XmlUtils.readNode(xmlStr, "Event");
-            if (StringUtils.isBlank(eventStr)) {
-                throw new IllegalArgumentException("invalid request param, xml=[" + xmlStr + "]");
-            }
-            Event event = Event.valueOf(eventStr);
-            switch (event) {
-                case subscribe:
-                    String ticket = XmlUtils.readNode(xmlStr, "Ticket");
-                    if (StringUtils.isBlank(ticket)) {
-                        return XmlUtils.parse(xmlStr, SubscribeEventMessage.class);
-                    }
-                    return XmlUtils.parse(xmlStr, QrCodeEventMessage.class);
-                case unsubscribe:
-                    return XmlUtils.parse(xmlStr, SubscribeEventMessage.class);
-                case SCAN:
-                    return XmlUtils.parse(xmlStr, QrCodeEventMessage.class);
-                case LOCATION:
-                    return XmlUtils.parse(xmlStr, LocationEventMessage.class);
-                case CLICK:
-                case VIEW:
-                    return XmlUtils.parse(xmlStr, CustomMenuEventMessage.class);
-                default:
-                    return null;
-            }
+            return MessageUtils.buildMessage(xmlMessageContent);
         }
     }
-
-
 }

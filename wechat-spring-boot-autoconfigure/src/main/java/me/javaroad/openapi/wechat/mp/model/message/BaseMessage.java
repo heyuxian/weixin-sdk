@@ -14,6 +14,8 @@ public abstract class BaseMessage {
     private String to;
     @JacksonXmlProperty(localName = "FromUserName")
     private String from;
+    @JacksonXmlProperty(localName = "URL")
+    private String url;
     @JacksonXmlProperty(localName = "CreateTime")
     private Long createTime;
 

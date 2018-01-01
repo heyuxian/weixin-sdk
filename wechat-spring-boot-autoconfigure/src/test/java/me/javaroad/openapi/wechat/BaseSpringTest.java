@@ -2,6 +2,7 @@ package me.javaroad.openapi.wechat;
 
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -9,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class BaseSpringTest {
+@ActiveProfiles("local")
+public abstract class BaseSpringTest {
 
 }

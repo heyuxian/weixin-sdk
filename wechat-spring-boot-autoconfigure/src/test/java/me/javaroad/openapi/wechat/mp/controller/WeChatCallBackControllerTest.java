@@ -1,6 +1,7 @@
 package me.javaroad.openapi.wechat.mp.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 
@@ -168,6 +169,11 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
+    public void test() {
+        System.out.println(System.currentTimeMillis());
+    }
+
+    @Test
     public void callback_locationMessage() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]></FromUserName>"
@@ -208,7 +214,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
                 assertThat(message.getMessageId()).isEqualTo(1234567890123456L);
                 assertThat(message.getTitle()).isEqualTo("公众平台官网链接");
                 assertThat(message.getDescription()).isEqualTo("公众平台官网链接");
-                assertThat(message.getUrl()).isEqualTo("url");
+                assertThat(message.getLink()).isEqualTo("url");
                 return true;
             }
         });
@@ -358,11 +364,16 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     private void callback(String messageXml, Matcher<? extends BaseMessage> matcher) {
+        callback("/wechat/callback", messageXml, matcher);
+    }
+
+    private void callback(String url, String messageXml, Matcher<? extends BaseMessage> matcher) {
         ResponseEntity<String> responseEntity = restTemplate
-            .postForEntity("/wechat/callback", messageXml, String.class);
+            .postForEntity(url, messageXml, String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotEqualTo("error");
-        verify(callBackController).callback(argThat(matcher));
+        verify(callBackController).callback(argThat(matcher), any());
     }
+
 
 }
