@@ -1,6 +1,8 @@
 # 微信 SDK
 [![Build Status](https://www.travis-ci.org/heyuxian/weixin-sdk.svg?branch=master)](https://www.travis-ci.org/heyuxian/weixin-sdk)
-[![Coverage Status](https://coveralls.io/repos/github/heyuxian/weixin-sdk/badge.svg?branch=master)](https://coveralls.io/github/heyuxian/weixin-sdk?branch=master)[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Coverage Status](https://coveralls.io/repos/github/heyuxian/weixin-sdk/badge.svg?branch=master)](https://coveralls.io/github/heyuxian/weixin-sdk?branch=master)
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## 项目简介
 
@@ -64,10 +66,15 @@ weixin:
 - 消息加解密
 - 被动回复
 
-所有的消息继承自 `Message` ， 当系统收到微信服务器推送的消息时，会自动判定消息是否经过加密，如果加密，则会进行解密操作。收到消息后，系统会做以下两个操作：
+当系统收到微信服务器推送的消息时，会自动判定消息是否经过加密，如果加密，则会进行解密操作。同样的，如果系统检测收到的消息是加过密的，回复给用户的消息也会自动加密而无需做任何操作。
+
+收到消息后，系统会做以下两个操作：
 
 - 系统会广播 `ReceiveMessageEvent` 事件，用户可以订阅此事件接收对应的消息。
-- 会同步调用系统的 `MessageHandler`，每一种消息都有对应的 `MessageHandler`，如 `TextMessageHandler` 这个 Handler 处理普通的文本消息。具体可查看 `wechat-samples` 模块。同时，`MessageHandler` 需要返回信息给微信服务器，返回的消息需要实现 `ResponseMessage` ，系统已经提供了默认实现，可在 `me.javaroad.openapi.wechat.mp.model` 下面找到所有实现类。同样的，如果收到的消息是经过加密的，返回的消息也会自动加密，不需要做特殊处理。
+
+- 同步调用系统的 `MessageHandler`。
+
+对于微信提供的每一种消息，系统都做了默认实现，你可以在 `me.javaroad.openapi.wechat.mp.model` 包下面找到对应实现。在接收微信服务器推送的消息时，你需要根据自己的业务提供 `MessageHandler` 并注册到系统中。
 
 **示例**：
 
