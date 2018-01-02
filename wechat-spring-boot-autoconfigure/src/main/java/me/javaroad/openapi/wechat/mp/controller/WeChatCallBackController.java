@@ -1,26 +1,25 @@
 package me.javaroad.openapi.wechat.mp.controller;
 
+import static me.javaroad.openapi.wechat.mp.WeChatConstants.DEFAULT_ERROR_RESPONSE_MESSAGE;
 import static me.javaroad.openapi.wechat.mp.WeChatConstants.DEFAULT_RESPONSE_MESSAGE;
-import static me.javaroad.openapi.wechat.mp.WeChatConstants.ENCRYPT_MESSAGE_PARAM;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.util.Objects;
+import java.io.BufferedReader;
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.javaroad.openapi.wechat.mp.config.WeChatMpProperties;
-import me.javaroad.openapi.wechat.mp.event.ReceiveMessageEvent;
 import me.javaroad.openapi.wechat.mp.model.WeChatRequest;
-import me.javaroad.openapi.wechat.mp.model.message.BaseMessage;
-import me.javaroad.openapi.wechat.mp.model.message.BaseResponseMessage;
 import me.javaroad.openapi.wechat.mp.model.message.EmptyResponseMessage;
 import me.javaroad.openapi.wechat.mp.model.message.EncryptMessage;
-import me.javaroad.openapi.wechat.mp.service.MessageHandler;
+import me.javaroad.openapi.wechat.mp.model.message.Message;
+import me.javaroad.openapi.wechat.mp.model.message.ResponseMessage;
+import me.javaroad.openapi.wechat.mp.support.MessageDispatcher;
 import me.javaroad.openapi.wechat.utils.MessageUtils;
 import me.javaroad.openapi.wechat.utils.SecurityUtils;
 import me.javaroad.openapi.wechat.utils.XmlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,34 +30,40 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("wechat")
-@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
+@RequestMapping("${weixin.endpoint.callback-url:/weixin/callback}")
 public class WeChatCallBackController {
 
-    private final WeChatMpProperties mpProperties;
-    private final ApplicationContext applicationContext;
-    private final MessageHandler handler;
+    @Autowired
+    private WeChatMpProperties mpProperties;
+    @Autowired
+    private MessageDispatcher messageDispatcher;
 
-    @GetMapping("callback")
+    @GetMapping
     public String callback(WeChatRequest weChatRequest) {
         String sign = SecurityUtils
             .sign(weChatRequest.getTimestamp(), weChatRequest.getNonce(), mpProperties.getSecurity().getToken());
         if (sign.equals(weChatRequest.getSignature())) {
             return weChatRequest.getEchostr();
         }
-        return "error";
+        return DEFAULT_ERROR_RESPONSE_MESSAGE;
     }
 
-    @PostMapping("callback")
-    public String callback(BaseMessage message, HttpServletRequest request) {
-        applicationContext.publishEvent(new ReceiveMessageEvent(message));
-        BaseResponseMessage responseMessage = handler.handleMessage(message);
+    @PostMapping
+    public String callback(HttpServletRequest request) throws Exception {
+        String requestBody = readRequestBody(request);
+        Boolean isEncrypt = MessageUtils.isEncrypt(requestBody);
+        String messageContentXml = requestBody;
+        if (isEncrypt) {
+            EncryptMessage encryptMessage = buildEncryptMessage(request, requestBody);
+            messageContentXml = MessageUtils.decryptMessage(encryptMessage, mpProperties);
+        }
+        Message message = MessageUtils.buildMessage(messageContentXml);
+        ResponseMessage responseMessage = messageDispatcher.dispatch(message);
+        if (responseMessage instanceof EmptyResponseMessage) {
+            return DEFAULT_RESPONSE_MESSAGE;
+        }
         try {
-            if (responseMessage instanceof EmptyResponseMessage) {
-                return DEFAULT_RESPONSE_MESSAGE;
-            }
-            Object isEncryptMessage = request.getAttribute(ENCRYPT_MESSAGE_PARAM);
-            if (Objects.nonNull(isEncryptMessage)) {
+            if (isEncrypt) {
                 EncryptMessage encryptMessage = MessageUtils.encryptMessage(responseMessage, mpProperties);
                 return XmlUtils.xmlString(encryptMessage);
             }
@@ -67,5 +72,30 @@ public class WeChatCallBackController {
             log.error(e.getMessage(), e);
             return DEFAULT_RESPONSE_MESSAGE;
         }
+    }
+
+    @ExceptionHandler(Exception.class)
+    public String exceptionHandler(Exception e) {
+        log.error(e.getMessage(), e);
+        return DEFAULT_RESPONSE_MESSAGE;
+    }
+
+    private EncryptMessage buildEncryptMessage(HttpServletRequest request, String requestBody) throws IOException {
+        return EncryptMessage.builder()
+            .nonce(request.getParameter("nonce"))
+            .timestamp(Long.valueOf(request.getParameter("timestamp")))
+            .signature(request.getParameter("msg_signature"))
+            .encrypt(XmlUtils.readNode(requestBody, "Encrypt"))
+            .build();
+    }
+
+    private String readRequestBody(HttpServletRequest request) throws IOException {
+        BufferedReader buffer = request.getReader();
+        StringBuilder builder = new StringBuilder();
+        String temp;
+        while ((temp = buffer.readLine()) != null) {
+            builder.append(temp);
+        }
+        return builder.toString();
     }
 }

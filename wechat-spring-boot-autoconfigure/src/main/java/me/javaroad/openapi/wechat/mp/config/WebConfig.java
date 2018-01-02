@@ -6,7 +6,7 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_RE
 import java.io.BufferedReader;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import me.javaroad.openapi.wechat.mp.model.message.BaseMessage;
+import me.javaroad.openapi.wechat.mp.model.message.AbstractMessage;
 import me.javaroad.openapi.wechat.mp.model.message.EncryptMessage;
 import me.javaroad.openapi.wechat.utils.MessageUtils;
 import me.javaroad.openapi.wechat.utils.XmlUtils;
@@ -38,7 +38,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
         @Override
         public boolean supportsParameter(MethodParameter parameter) {
-            return BaseMessage.class.isAssignableFrom(parameter.getParameterType());
+            return AbstractMessage.class.isAssignableFrom(parameter.getParameterType());
         }
 
         @Override

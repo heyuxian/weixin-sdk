@@ -9,7 +9,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public abstract class EventMessage extends BaseMessage {
+public abstract class EventMessage extends AbstractMessage {
 
     @JacksonXmlProperty(localName = "MsgId")
     private Long messageId;

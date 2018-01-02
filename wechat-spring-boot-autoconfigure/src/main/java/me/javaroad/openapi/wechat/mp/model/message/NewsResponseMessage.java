@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class NewsResponseMessage extends BaseResponseMessage {
+public class NewsResponseMessage extends AbstractResponseMessage {
     @JacksonXmlProperty(localName = "MediaId")
     private String mediaId;
     @JacksonXmlProperty(localName = "ArticleCount")

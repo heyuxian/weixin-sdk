@@ -12,4 +12,5 @@ public class WeChatMpServer {
     public static void main(String[] args) {
         SpringApplication.run(WeChatMpServer.class, args);
     }
+
 }

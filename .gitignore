@@ -3,3 +3,4 @@ target/
 *.iml
 update/
 logs/
+application-test.yml

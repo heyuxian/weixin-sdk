@@ -6,6 +6,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
  * @author heyx
  */
 @JacksonXmlRootElement(localName = "xml")
-public abstract class BaseResponseMessage extends BaseMessage {
+public abstract class AbstractResponseMessage extends AbstractMessage implements ResponseMessage {
 
 }

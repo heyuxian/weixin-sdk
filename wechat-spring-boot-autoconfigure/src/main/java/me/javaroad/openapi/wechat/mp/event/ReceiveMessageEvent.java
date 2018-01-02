@@ -1,6 +1,6 @@
 package me.javaroad.openapi.wechat.mp.event;
 
-import me.javaroad.openapi.wechat.mp.model.message.BaseMessage;
+import me.javaroad.openapi.wechat.mp.model.message.Message;
 import org.springframework.context.ApplicationEvent;
 
 /**
@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationEvent;
  */
 public class ReceiveMessageEvent extends ApplicationEvent {
 
-    public ReceiveMessageEvent(BaseMessage source) {
+    public ReceiveMessageEvent(Message source) {
         super(source);
     }
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class VideoResponseMessage extends BaseResponseMessage {
+public class VideoResponseMessage extends AbstractResponseMessage {
     @JacksonXmlProperty(localName = "MediaId")
     private String mediaId;
     @JacksonXmlProperty(localName = "Title")

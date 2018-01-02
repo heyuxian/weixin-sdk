@@ -1,45 +1,33 @@
 package me.javaroad.openapi.wechat.mp.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.verify;
 
-import me.javaroad.openapi.wechat.BaseSpringMvcTest;
-import me.javaroad.openapi.wechat.mp.model.message.BaseMessage;
+import me.javaroad.openapi.wechat.mp.model.message.AbstractMessage;
 import me.javaroad.openapi.wechat.mp.model.message.CustomMenuEventMessage;
 import me.javaroad.openapi.wechat.mp.model.message.Event;
 import me.javaroad.openapi.wechat.mp.model.message.ImageMessage;
 import me.javaroad.openapi.wechat.mp.model.message.LinkMessage;
 import me.javaroad.openapi.wechat.mp.model.message.LocationEventMessage;
 import me.javaroad.openapi.wechat.mp.model.message.LocationMessage;
+import me.javaroad.openapi.wechat.mp.model.message.Message;
 import me.javaroad.openapi.wechat.mp.model.message.QrCodeEventMessage;
 import me.javaroad.openapi.wechat.mp.model.message.ShortVideoMessage;
 import me.javaroad.openapi.wechat.mp.model.message.SubscribeEventMessage;
 import me.javaroad.openapi.wechat.mp.model.message.TextMessage;
 import me.javaroad.openapi.wechat.mp.model.message.VideoMessage;
 import me.javaroad.openapi.wechat.mp.model.message.VoiceMessage;
+import me.javaroad.openapi.wechat.utils.MessageUtils;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 /**
  * @author heyx
  */
-public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
-
-    @MockBean
-    private WeChatCallBackController callBackController;
-    @Autowired
-    private TestRestTemplate restTemplate;
+public class WeChatCallBackControllerTest {
 
     @Test
-    public void callback_textMessage() throws Exception {
+    public void buildMessage_textMessage() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]></FromUserName>"
                 + "<CreateTime>1348831860</CreateTime><MsgType><![CDATA[text]]></MsgType><Content>"
@@ -59,7 +47,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void callback_imageMessage() throws Exception {
+    public void buildMessage_imageMessage() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]></FromUserName>"
                 + "<CreateTime>1348831860</CreateTime><MsgType><![CDATA[image]]></MsgType><PicUrl>"
@@ -80,7 +68,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void callback_voiceMessage() throws Exception {
+    public void buildMessage_voiceMessage() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]></FromUserName>"
                 + "<CreateTime>1357290913</CreateTime><MsgType><![CDATA[voice]]></MsgType><MediaId>"
@@ -102,7 +90,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void callback_voiceMessageRecognition() throws Exception {
+    public void buildMessage_voiceMessageRecognition() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]></FromUserName>"
                 + "<CreateTime>1357290913</CreateTime><MsgType><![CDATA[voice]]></MsgType><MediaId>"
@@ -125,7 +113,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void callback_videoMessage() throws Exception {
+    public void buildMessage_videoMessage() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]></FromUserName>"
                 + "<CreateTime>1357290913</CreateTime><MsgType><![CDATA[video]]></MsgType><MediaId>"
@@ -147,7 +135,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void callback_shortVideoMessage() throws Exception {
+    public void buildMessage_shortVideoMessage() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]></FromUserName>"
                 + "<CreateTime>1357290913</CreateTime><MsgType><![CDATA[shortvideo]]></MsgType><MediaId>"
@@ -169,12 +157,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void test() {
-        System.out.println(System.currentTimeMillis());
-    }
-
-    @Test
-    public void callback_locationMessage() throws Exception {
+    public void buildMessage_locationMessage() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]></FromUserName>"
                 + "<CreateTime>1351776360</CreateTime><MsgType><![CDATA[location]]></MsgType>"
@@ -198,7 +181,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void callback_linkMessage() throws Exception {
+    public void buildMessage_linkMessage() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]></FromUserName>"
                 + "<CreateTime>1351776360</CreateTime><MsgType><![CDATA[link]]></MsgType><Title>"
@@ -221,7 +204,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void callback_subscribeEventMessage() throws Exception {
+    public void buildMessage_subscribeEventMessage() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[FromUser]]></FromUserName>"
                 + "<CreateTime>123456789</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[subscribe]]>"
@@ -240,7 +223,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void callback_unsubscribeEventMessage() throws Exception {
+    public void buildMessage_unsubscribeEventMessage() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[FromUser]]></FromUserName>"
                 + "<CreateTime>123456789</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[unsubscribe]]>"
@@ -259,7 +242,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void callback_qrCodeEventMessage_subscribe() throws Exception {
+    public void buildMessage_qrCodeEventMessage_subscribe() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[FromUser]]></FromUserName>"
                 + "<CreateTime>123456789</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[subscribe]]>"
@@ -280,7 +263,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void callback_qrCodeEventMessage_scan() throws Exception {
+    public void buildMessage_qrCodeEventMessage_scan() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[FromUser]]></FromUserName>"
                 + "<CreateTime>123456789</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[SCAN]]>"
@@ -301,7 +284,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void callback_locationEventMessage() throws Exception {
+    public void buildMessage_locationEventMessage() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]>"
                 + "</FromUserName><CreateTime>123456789</CreateTime><MsgType><![CDATA[event]]>"
@@ -324,7 +307,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void callback_customMenuEventMessage_click() throws Exception {
+    public void buildMessage_customMenuEventMessage_click() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[FromUser]]></FromUserName>"
                 + "<CreateTime>123456789</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[CLICK]]>"
@@ -344,7 +327,7 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
     }
 
     @Test
-    public void callback_customMenuEventMessage_view() throws Exception {
+    public void buildMessage_customMenuEventMessage_view() throws Exception {
         String messageXml =
             "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[FromUser]]></FromUserName>"
                 + "<CreateTime>123456789</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[VIEW]]>"
@@ -363,16 +346,10 @@ public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
         });
     }
 
-    private void callback(String messageXml, Matcher<? extends BaseMessage> matcher) {
-        callback("/wechat/callback", messageXml, matcher);
-    }
+    private void callback(String messageXml, Matcher<? extends AbstractMessage> matcher) {
+        Message message = MessageUtils.buildMessage(messageXml);
+        matcher.matches(message);
 
-    private void callback(String url, String messageXml, Matcher<? extends BaseMessage> matcher) {
-        ResponseEntity<String> responseEntity = restTemplate
-            .postForEntity(url, messageXml, String.class);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isNotEqualTo("error");
-        verify(callBackController).callback(argThat(matcher), any());
     }
 
 

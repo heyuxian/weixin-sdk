@@ -9,7 +9,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class TextResponseMessage extends BaseResponseMessage {
+public class TextResponseMessage extends AbstractResponseMessage {
     @JacksonXmlProperty(localName = "Content")
     private String content;
     @JacksonXmlProperty(localName = "MsgType")

@@ -5,6 +5,7 @@ import static me.javaroad.openapi.wechat.mp.WeChatConstants.DEFAULT_CHARSET;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.stream.Collectors;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -13,7 +14,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.javaroad.openapi.wechat.exception.WeChatException;
 import me.javaroad.openapi.wechat.mp.config.WeChatMpProperties;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -72,7 +72,7 @@ public class SecurityUtils {
             // 加密
             byte[] encrypted = cipher.doFinal(unencrypted);
             // 使用BASE64对加密后的字符串进行编码
-            return Base64.encodeBase64String(encrypted);
+            return Base64.getEncoder().encodeToString(encrypted);
         } catch (Exception e) {
             throw new WeChatException("encode message failed", e);
         }
@@ -91,7 +91,7 @@ public class SecurityUtils {
             IvParameterSpec iv = new IvParameterSpec(Arrays.copyOfRange(aesKey, 0, 16));
             cipher.init(Cipher.DECRYPT_MODE, keySpec, iv);
             // 使用BASE64对密文进行解码
-            byte[] encrypted = Base64.decodeBase64(source);
+            byte[] encrypted = Base64.getDecoder().decode(source);
             // 解密
             original = cipher.doFinal(encrypted);
         } catch (Exception e) {
@@ -122,7 +122,7 @@ public class SecurityUtils {
     }
 
     private static byte[] getEncodingAesKey(String key) {
-        return Base64.decodeBase64(key + "=");
+        return Base64.getDecoder().decode(key + "=");
     }
 
     // 生成4个字节的网络字节序

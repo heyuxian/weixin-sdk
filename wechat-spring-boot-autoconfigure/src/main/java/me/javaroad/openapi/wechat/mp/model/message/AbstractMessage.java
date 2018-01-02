@@ -9,7 +9,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public abstract class BaseMessage {
+public abstract class AbstractMessage implements Message {
     @JacksonXmlProperty(localName = "ToUserName")
     private String to;
     @JacksonXmlProperty(localName = "FromUserName")
@@ -19,5 +19,4 @@ public abstract class BaseMessage {
     @JacksonXmlProperty(localName = "CreateTime")
     private Long createTime;
 
-    public abstract MessageType getMessageType();
 }

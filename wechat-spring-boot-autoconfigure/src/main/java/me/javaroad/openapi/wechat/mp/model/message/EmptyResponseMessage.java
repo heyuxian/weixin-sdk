@@ -11,7 +11,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class EmptyResponseMessage extends BaseResponseMessage {
+public class EmptyResponseMessage extends AbstractResponseMessage {
 
     @Override
     public MessageType getMessageType() {

@@ -7,8 +7,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.javaroad.openapi.wechat.exception.WeChatException;
 import me.javaroad.openapi.wechat.mp.config.WeChatMpProperties;
-import me.javaroad.openapi.wechat.mp.model.message.BaseMessage;
-import me.javaroad.openapi.wechat.mp.model.message.BaseResponseMessage;
 import me.javaroad.openapi.wechat.mp.model.message.CustomMenuEventMessage;
 import me.javaroad.openapi.wechat.mp.model.message.EncryptMessage;
 import me.javaroad.openapi.wechat.mp.model.message.Event;
@@ -16,8 +14,10 @@ import me.javaroad.openapi.wechat.mp.model.message.ImageMessage;
 import me.javaroad.openapi.wechat.mp.model.message.LinkMessage;
 import me.javaroad.openapi.wechat.mp.model.message.LocationEventMessage;
 import me.javaroad.openapi.wechat.mp.model.message.LocationMessage;
+import me.javaroad.openapi.wechat.mp.model.message.Message;
 import me.javaroad.openapi.wechat.mp.model.message.MessageType;
 import me.javaroad.openapi.wechat.mp.model.message.QrCodeEventMessage;
+import me.javaroad.openapi.wechat.mp.model.message.ResponseMessage;
 import me.javaroad.openapi.wechat.mp.model.message.ShortVideoMessage;
 import me.javaroad.openapi.wechat.mp.model.message.SubscribeEventMessage;
 import me.javaroad.openapi.wechat.mp.model.message.TextMessage;
@@ -31,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MessageUtils {
 
-    public static EncryptMessage encryptMessage(BaseResponseMessage message, WeChatMpProperties mpProperties) {
+    public static EncryptMessage encryptMessage(ResponseMessage message, WeChatMpProperties mpProperties) {
         String messageXmlStr;
         try {
             messageXmlStr = XmlUtils.xmlString(message);
@@ -61,7 +61,7 @@ public class MessageUtils {
         return SecurityUtils.decrypt(encryptMessage.getEncrypt(), mpProperties);
     }
 
-    public static BaseMessage buildMessage(String xmlMessageContent) {
+    public static Message buildMessage(String xmlMessageContent) {
         String msgType;
         try {
             msgType = XmlUtils.readNode(xmlMessageContent, "MsgType");
@@ -79,7 +79,7 @@ public class MessageUtils {
         }
     }
 
-    private static BaseMessage buildMessage(MessageType messageType, String xmlStr) throws IOException {
+    private static Message buildMessage(MessageType messageType, String xmlStr) throws IOException {
         switch (messageType) {
             case text:
                 return XmlUtils.parse(xmlStr, TextMessage.class);
@@ -98,11 +98,11 @@ public class MessageUtils {
             case event:
                 return buildEventMessage(xmlStr);
             default:
-                return null;
+                throw new IllegalArgumentException("unsupported messageType[" + messageType + "]");
         }
     }
 
-    private static BaseMessage buildEventMessage(String xmlStr) throws IOException {
+    private static Message buildEventMessage(String xmlStr) throws IOException {
         String eventStr = XmlUtils.readNode(xmlStr, "Event");
         if (StringUtils.isBlank(eventStr)) {
             throw new IllegalArgumentException("invalid request param, xml=[" + xmlStr + "]");

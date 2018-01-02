@@ -1,0 +1,15 @@
+weixin:
+  endpoint:
+    # 微信回调地址，默认为 /weixin/callback，如需自定义，请修改以下配置项
+    callback-url: /weixin/callback
+  mp:
+    security:
+      # 微信后台配置的 token
+      token: 1234567890
+      # 微信后台配置的消息加解密 aeskey
+      encodingAesKey: abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG
+    auth:
+      # APPID
+      appid: appid
+      # APP secret
+      secret: secret
