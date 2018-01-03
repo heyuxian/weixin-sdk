@@ -1,7 +1,6 @@
 # 微信 SDK
 [![Build Status](https://www.travis-ci.org/heyuxian/weixin-sdk.svg?branch=master)](https://www.travis-ci.org/heyuxian/weixin-sdk)
 [![Coverage Status](https://coveralls.io/repos/github/heyuxian/weixin-sdk/badge.svg?branch=master)](https://coveralls.io/github/heyuxian/weixin-sdk?branch=master)
-
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## 项目简介

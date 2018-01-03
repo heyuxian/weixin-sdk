@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  me.javaroad.openapi.wechat.mp.WeChatMpAutoConfiguration
+  me.javaroad.sdk.wechat.mp.WeChatMpAutoConfiguration
