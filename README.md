@@ -5,7 +5,7 @@
 
 ## 项目简介
 
-本项目使用 spring-boot-starter 的形式封装了微信公众平台的常用 API。
+本项目使用 spring-boot-starter 的形式封装了微信公众平台的常用 API，延续了 spring-boot 的风格，以最少化配置项为目标，除了 appid, secret 等基础配置项之外，你不需要做任何其他设置，系统提供的默认设置已经能覆盖大部分的使用情况；当然，总还是会有些特殊需求不能被覆盖到，所以系统也对外提供了接口，用户可以实现对应模块的接口来覆盖系统的默认设置。
 
 ## Quick Start
 
@@ -42,15 +42,21 @@
 
 ```yaml
 weixin:
-  endpoint:
-    # 微信回调地址，默认为 /weixin/callback，如需自定义，请修改以下配置项
-    callback-url: /weixin/callback
   mp:
+    endpoint:
+      # 微信回调地址，默认为 /weixin/callback，如需自定义，请修改以下配置项
+      callback-url: /weixin/callback
     security:
       # 微信后台配置的 token
       token: 1234567890
       # 微信后台配置的消息加解密 aeskey
       encodingAesKey: abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG
+      # #############################################################
+      # 微信 access token 过期刷新阈值，计算方法：
+      # 当前时间 - (获得token时间 + token 有效期 + 阈值) < 0 则刷新 token
+      # 默认为 token 失效前 5 分钟刷新
+      # #############################################################
+      refresh-token-threshold: 300
     auth:
       # APPID
       appid: appid
@@ -58,53 +64,32 @@ weixin:
       secret: secret
 ```
 
-**消息模块**
+完成以上两项配置后，已经可以成功接入微信。接下来，你可以根据自身需求阅读对应模块的[文档](https://github.com/heyuxian/weixin-sdk/wiki)，实现自己的业务逻辑。
 
-- 普通消息
-- 事件推送
-- 消息加解密
-- 被动回复
+## [目录](https://github.com/heyuxian/weixin-sdk/wiki)
 
-当系统收到微信服务器推送的消息时，会自动判定消息是否经过加密，如果加密，则会进行解密操作。同样的，如果系统检测收到的消息是加过密的，回复给用户的消息也会自动加密而无需做任何操作。
+## 目录
 
-收到消息后，系统会做以下两个操作：
+- [获取 AccessToken](https://github.com/heyuxian/weixin-sdk/wiki/%E8%8E%B7%E5%8F%96-AccessToken)
+- [消息管理](https://github.com/heyuxian/weixin-sdk/wiki/%E6%B6%88%E6%81%AF%E7%AE%A1%E7%90%86)
+  - 接收普通消息
+  - 接收事件推送
+  - 被动回复消息
+  - 消息加解密
+  - 获取微信服务器 IP
+  - 客服消息
+  - 群发接口和原创校验
+  - 模板消息接口
+  - 一次性订阅消息
+- 素材管理
+- 图文消息留言管理
+- 用户管理
+- 账号管理
+- 数据统计
+- 微信卡卷
+- ... TODO
 
-- 系统会广播 `ReceiveMessageEvent` 事件，用户可以订阅此事件接收对应的消息。
-
-- 同步调用系统的 `MessageHandler`。
-
-对于微信提供的每一种消息，系统都做了默认实现，你可以在 `me.javaroad.openapi.wechat.mp.model` 包下面找到对应实现。在接收微信服务器推送的消息时，你需要根据自己的业务提供 `MessageHandler` 并注册到系统中。
-
-**示例**：
-
-```java
-/**
- * @author heyx
- * 这个方法处理普通文本消息
- */
-@Component
-public class TextMessageHandler extends AbstractMessageHandler<TextMessage> {
-
-    public TextMessageHandler(MessageHandlerFactory messageHandlerFactory) {
-        super(messageHandlerFactory);
-    }
-    @Override
-    public ResponseMessage handleMessage(TextMessage message) {
-        // 此处根据业务对收到的消息做处理，注意，处理时间不能超过 5s，否则会导致微信对用户给出严重错误的提示
-        // 如果时间很可能超过 5s, 需要在新线程中处理
-        // 如果不需要对用户返回任何消息，则请在此处返回 EmptyResponseMessage
-        return new TextResponseMessage();
-    }
-}
-```
-
-## 结论
-
-总的来说，你只需要做两件事情：
-
-1. 在 `application.yml` (或是 application.properties) 中配置对应的参数。
-2. 自定义或直接使用默认的 `MessageHandler` 处理消息并返回。
 
 ## 问题及建议
 
-若是对于本项目有任何问题或建议,请提 [Issue](https://github.com/heyuxian/mcloud/issues/new) 。
+若是对于本项目有任何问题或建议,请提 [Issue](https://github.com/heyuxian/weixin-sdk/issues/new) 。

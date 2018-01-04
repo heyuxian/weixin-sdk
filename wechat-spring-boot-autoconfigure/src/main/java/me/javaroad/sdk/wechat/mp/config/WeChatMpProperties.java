@@ -14,13 +14,24 @@ public class WeChatMpProperties {
 
     private OAuth auth;
     private Security security;
+    private Endpoint endpoint;
 
     @Getter
     @Setter
     public static class Security {
+
         private String token;
         private String encodingAesKey;
+        private Integer refreshTokenThreshold = 5 * 60;
     }
+
+    @Getter
+    @Setter
+    public static class Endpoint {
+
+        private String callbackUrl;
+    }
+
 
     @Getter
     @Setter

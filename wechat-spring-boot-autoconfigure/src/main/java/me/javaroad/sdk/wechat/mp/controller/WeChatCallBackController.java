@@ -1,7 +1,7 @@
 package me.javaroad.sdk.wechat.mp.controller;
 
 import static me.javaroad.sdk.wechat.mp.WeChatConstants.DEFAULT_ERROR_RESPONSE_MESSAGE;
-import static me.javaroad.sdk.wechat.mp.WeChatConstants.DEFAULT_RESPONSE_MESSAGE;
+import static me.javaroad.sdk.wechat.mp.WeChatConstants.DEFAULT_SUCCESS_RESPONSE_MESSAGE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.BufferedReader;
@@ -60,7 +60,7 @@ public class WeChatCallBackController {
         Message message = MessageUtils.buildMessage(messageContentXml);
         ResponseMessage responseMessage = messageDispatcher.dispatch(message);
         if (responseMessage instanceof EmptyResponseMessage) {
-            return DEFAULT_RESPONSE_MESSAGE;
+            return DEFAULT_SUCCESS_RESPONSE_MESSAGE;
         }
         try {
             if (isEncrypt) {
@@ -70,14 +70,14 @@ public class WeChatCallBackController {
             return XmlUtils.xmlString(responseMessage);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage(), e);
-            return DEFAULT_RESPONSE_MESSAGE;
+            return DEFAULT_SUCCESS_RESPONSE_MESSAGE;
         }
     }
 
     @ExceptionHandler(Exception.class)
     public String exceptionHandler(Exception e) {
         log.error(e.getMessage(), e);
-        return DEFAULT_RESPONSE_MESSAGE;
+        return DEFAULT_SUCCESS_RESPONSE_MESSAGE;
     }
 
     private EncryptMessage buildEncryptMessage(HttpServletRequest request, String requestBody) throws IOException {

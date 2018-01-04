@@ -1,5 +1,6 @@
 package me.javaroad.sdk.wechat.mp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +10,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class AccessTokenResponse {
+public class AccessToken {
     @JsonProperty("access_token")
     private String accessToken;
     @JsonProperty("expires_in")
-    private Long expiresIn;
+    private Integer expiresIn;
+    @JsonIgnore
+    private Long refreshIn;
 }
