@@ -19,7 +19,7 @@
 ```xml
 <dependency>
 	<groupId>me.javaroad.openapi.wechat</groupId>
-	<artifactId>wechat-spring-boot-starters</artifactId>
+	<artifactId>wechat-spring-boot-starter</artifactId>
 	<version>1.0-SNAPSHOT</version>
 </dependency>
 ```

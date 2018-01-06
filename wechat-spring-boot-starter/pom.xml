@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>me.javaroad.sdk.wechat</groupId>
-  <artifactId>wechat-spring-boot-starters</artifactId>
+  <artifactId>wechat-spring-boot-starter</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>wechat-spring-boot-starters</name>
+  <name>wechat-spring-boot-starter</name>
 
   <parent>
     <groupId>me.javaroad</groupId>

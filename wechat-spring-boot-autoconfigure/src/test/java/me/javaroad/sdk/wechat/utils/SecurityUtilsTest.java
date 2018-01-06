@@ -1,7 +1,7 @@
 package me.javaroad.sdk.wechat.utils;
 
-import me.javaroad.sdk.wechat.BaseSpringTest;
 import me.javaroad.sdk.wechat.mp.config.WeChatMpProperties;
+import me.javaroad.test.BaseSpringTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

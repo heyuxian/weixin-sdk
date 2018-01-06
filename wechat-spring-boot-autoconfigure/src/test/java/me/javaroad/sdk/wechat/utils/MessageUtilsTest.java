@@ -2,7 +2,6 @@ package me.javaroad.sdk.wechat.utils;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-import me.javaroad.sdk.wechat.BaseSpringTest;
 import me.javaroad.sdk.wechat.mp.config.WeChatMpProperties;
 import me.javaroad.sdk.wechat.mp.model.message.AbstractMessage;
 import me.javaroad.sdk.wechat.mp.model.message.CustomMenuEventMessage;
@@ -20,6 +19,7 @@ import me.javaroad.sdk.wechat.mp.model.message.TextMessage;
 import me.javaroad.sdk.wechat.mp.model.message.TextResponseMessage;
 import me.javaroad.sdk.wechat.mp.model.message.VideoMessage;
 import me.javaroad.sdk.wechat.mp.model.message.VoiceMessage;
+import me.javaroad.test.BaseSpringTest;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matcher;
 import org.junit.Test;

@@ -2,8 +2,8 @@ package me.javaroad.sdk.wechat.mp.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import me.javaroad.sdk.wechat.BaseSpringTest;
 import me.javaroad.sdk.wechat.mp.model.AccessToken;
+import me.javaroad.test.BaseSpringTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.IfProfileValue;

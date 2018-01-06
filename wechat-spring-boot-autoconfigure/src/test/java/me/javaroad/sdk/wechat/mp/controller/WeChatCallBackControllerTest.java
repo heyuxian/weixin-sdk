@@ -1,6 +1,8 @@
 package me.javaroad.sdk.wechat.mp.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.verify;
 
 import me.javaroad.sdk.wechat.mp.model.message.AbstractMessage;
 import me.javaroad.sdk.wechat.mp.model.message.CustomMenuEventMessage;
@@ -9,22 +11,28 @@ import me.javaroad.sdk.wechat.mp.model.message.ImageMessage;
 import me.javaroad.sdk.wechat.mp.model.message.LinkMessage;
 import me.javaroad.sdk.wechat.mp.model.message.LocationEventMessage;
 import me.javaroad.sdk.wechat.mp.model.message.LocationMessage;
-import me.javaroad.sdk.wechat.mp.model.message.Message;
 import me.javaroad.sdk.wechat.mp.model.message.QrCodeEventMessage;
 import me.javaroad.sdk.wechat.mp.model.message.ShortVideoMessage;
 import me.javaroad.sdk.wechat.mp.model.message.SubscribeEventMessage;
 import me.javaroad.sdk.wechat.mp.model.message.TextMessage;
 import me.javaroad.sdk.wechat.mp.model.message.VideoMessage;
 import me.javaroad.sdk.wechat.mp.model.message.VoiceMessage;
-import me.javaroad.sdk.wechat.utils.MessageUtils;
+import me.javaroad.sdk.wechat.mp.support.MessageDispatcher;
+import me.javaroad.test.BaseSpringMvcTest;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 /**
  * @author heyx
  */
-public class WeChatCallBackControllerTest {
+public class WeChatCallBackControllerTest extends BaseSpringMvcTest {
+
+    @MockBean
+    private MessageDispatcher messageDispatcher;
 
     @Test
     public void buildMessage_textMessage() throws Exception {
@@ -347,8 +355,10 @@ public class WeChatCallBackControllerTest {
     }
 
     private void callback(String messageXml, Matcher<? extends AbstractMessage> matcher) {
-        Message message = MessageUtils.buildMessage(messageXml);
-        matcher.matches(message);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity("/weixin/callback",
+            messageXml, String.class);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(messageDispatcher).dispatch(argThat(matcher));
 
     }
 

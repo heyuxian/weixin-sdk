@@ -2,6 +2,7 @@ package me.javaroad.sdk.wechat.mp;
 
 import me.javaroad.sdk.wechat.mp.config.WeChatMpProperties;
 import me.javaroad.sdk.wechat.mp.controller.WeChatCallBackController;
+import me.javaroad.sdk.wechat.mp.http.WeChatApiRequest;
 import me.javaroad.sdk.wechat.mp.service.AccessTokenService;
 import me.javaroad.sdk.wechat.mp.store.InMemoryTokenStore;
 import me.javaroad.sdk.wechat.mp.store.TokenStore;
@@ -38,10 +39,14 @@ public class WeChatMpAutoConfiguration {
 
     @Bean
     public AccessTokenService accessTokenService(TokenStore tokenStore,
-        RestTemplate restTemplate, WeChatMpProperties mpProperties) {
-        return new AccessTokenService(tokenStore, restTemplate, mpProperties);
+        WeChatApiRequest weChatApiRequest, WeChatMpProperties mpProperties) {
+        return new AccessTokenService(tokenStore, weChatApiRequest, mpProperties);
     }
 
+    @Bean
+    public WeChatApiRequest weChatApiRequest(RestTemplate restTemplate, WeChatMpProperties mpProperties) {
+        return new WeChatApiRequest(restTemplate, mpProperties);
+    }
     @Bean
     @ConditionalOnMissingBean(MessageHandlerFactory.class)
     public MessageHandlerFactory messageHandlerFactory() {

@@ -24,12 +24,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.squareup.okhttp3</groupId>
-      <artifactId>okhttp</artifactId>
-      <version>3.9.1</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-autoconfigure</artifactId>
     </dependency>
@@ -48,6 +42,13 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
       <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>me.javaroad</groupId>
+      <artifactId>javaroad-test</artifactId>
+      <version>${javaroad-test.version}</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

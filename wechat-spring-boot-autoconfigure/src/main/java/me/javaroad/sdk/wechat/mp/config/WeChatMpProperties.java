@@ -15,6 +15,7 @@ public class WeChatMpProperties {
     private OAuth auth;
     private Security security;
     private Endpoint endpoint;
+    private Log log;
 
     @Getter
     @Setter
@@ -30,6 +31,7 @@ public class WeChatMpProperties {
     public static class Endpoint {
 
         private String callbackUrl;
+        private String uploadImageUrl = "https://api.weixin.qq.com/cgi-bin/media/uploadimg";
     }
 
 
@@ -48,5 +50,11 @@ public class WeChatMpProperties {
                 + "&appid=" + appid
                 + "&secret=" + secret;
         }
+    }
+
+    @Getter
+    @Setter
+    public static class Log {
+        private Boolean logPostParam = true;
     }
 }
