@@ -1,10 +1,8 @@
-package me.javaroad.sdk.wechat.mp.support.handler;
+package me.javaroad.sdk.wechat.mp.handler;
 
 import me.javaroad.sdk.wechat.mp.model.message.ResponseMessage;
 import me.javaroad.sdk.wechat.mp.model.message.TextMessage;
 import me.javaroad.sdk.wechat.mp.model.message.TextResponseMessage;
-import me.javaroad.sdk.wechat.mp.support.handler.AbstractMessageHandler;
-import me.javaroad.sdk.wechat.mp.support.handler.MessageHandlerFactory;
 import org.springframework.stereotype.Component;
 
 /**

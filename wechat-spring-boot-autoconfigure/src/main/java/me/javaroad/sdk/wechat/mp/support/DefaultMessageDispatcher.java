@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import me.javaroad.sdk.wechat.mp.event.ReceiveMessageEvent;
 import me.javaroad.sdk.wechat.mp.model.message.Message;
 import me.javaroad.sdk.wechat.mp.model.message.ResponseMessage;
-import me.javaroad.sdk.wechat.mp.support.handler.MessageHandler;
-import me.javaroad.sdk.wechat.mp.support.handler.MessageHandlerFactory;
+import me.javaroad.sdk.wechat.mp.handler.MessageHandler;
+import me.javaroad.sdk.wechat.mp.handler.MessageHandlerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 

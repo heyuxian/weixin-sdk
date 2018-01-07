@@ -1,10 +1,15 @@
-package me.javaroad.sdk.wechat;
+package me.javaroad.sdk.wechat.mp.event;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.verify;
 
-import me.javaroad.sdk.wechat.mp.ReceiveMessageEventListener;
+import me.javaroad.sdk.wechat.mp.model.message.TextMessage;
+import me.javaroad.test.BaseSpringMvcTest;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +21,7 @@ public class ReceiveMessageEventListenerTest extends BaseSpringMvcTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-    @Autowired
+    @MockBean
     private ReceiveMessageEventListener eventListener;
 
     @Test
@@ -30,14 +35,14 @@ public class ReceiveMessageEventListenerTest extends BaseSpringMvcTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotEqualTo("error");
 
-        /*verify(eventListener).onApplicationEvent(argThat(new ArgumentMatcher<ReceiveMessageEvent>() {
+        verify(eventListener).onApplicationEvent(argThat(new ArgumentMatcher<ReceiveMessageEvent>() {
             @Override
             public boolean matches(Object argument) {
                 ReceiveMessageEvent messageEvent = (ReceiveMessageEvent) argument;
                 assertThat(messageEvent.getSource() instanceof TextMessage).isTrue();
                 return true;
             }
-        }));*/
+        }));
     }
 
 }

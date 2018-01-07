@@ -1,4 +1,4 @@
-package me.javaroad.sdk.wechat.mp.support.handler;
+package me.javaroad.sdk.wechat.mp.handler;
 
 import java.util.Map;
 import java.util.Objects;

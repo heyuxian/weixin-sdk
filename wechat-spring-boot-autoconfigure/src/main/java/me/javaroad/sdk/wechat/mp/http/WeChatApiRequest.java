@@ -8,10 +8,10 @@ import me.javaroad.sdk.wechat.mp.config.WeChatMpProperties;
 import me.javaroad.sdk.wechat.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -58,7 +58,7 @@ public class WeChatApiRequest {
         }
     }
 
-    public <T, R> R post(String url, MultiValueMap<String, String> headers, T body, Class<R> clazz) {
+    public <T, R> R post(String url, HttpHeaders headers, T body, Class<R> clazz) {
         String paramJsonString = "post param logs are not enabled";
         try {
             HttpEntity<T> httpEntity = new HttpEntity<>(body, headers);
