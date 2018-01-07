@@ -7,11 +7,11 @@ jdk:
   - oraclejdk8
 install:
   - cd ./wechat-spring-boot-autoconfigure
-  - mvn clean install -Dmaven.test.skip=true --settings ../.m2/settings.xml -Ptravis-building
+  - mvn clean install -Dmaven.test.skip=true -s ../.m2/settings.xml
 script:
-  - mvn test --settings ../.m2/settings.xml -Ptravis-building
+  - mvn test --settings ../.m2/settings.xml
 after_success:
-  - mvn test -DactiveProfile=local jacoco:report coveralls:report --settings ../.m2/settings.xml -Ptravis-building
+  - mvn test -DactiveProfile=local jacoco:report coveralls:report -s ../.m2/settings.xml
 notifications:
   email:
     - heyuxian.me@gmail.com

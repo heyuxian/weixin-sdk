@@ -1,5 +1,6 @@
 package me.javaroad.sdk.wechat.mp.event;
 
+import me.javaroad.sdk.wechat.mp.event.ReceiveMessageEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
