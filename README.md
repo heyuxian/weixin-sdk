@@ -68,8 +68,6 @@ weixin:
 
 ## [目录](https://github.com/heyuxian/weixin-sdk/wiki)
 
-## 目录
-
 - [获取 AccessToken](https://github.com/heyuxian/weixin-sdk/wiki/%E8%8E%B7%E5%8F%96-AccessToken)
 - [消息管理](https://github.com/heyuxian/weixin-sdk/wiki/%E6%B6%88%E6%81%AF%E7%AE%A1%E7%90%86)
   - 接收普通消息

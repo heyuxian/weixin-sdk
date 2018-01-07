@@ -4,6 +4,6 @@ weixin:
       token: 1234567890
       encodingAesKey: abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG
     auth:
-      appid: wxee8e8890484d1fe3
-      secret: 2461e7108c79de08d690b1b532fa71c4
+      appid: ${appid}
+      secret: ${secret}
       token-url: https://api.weixin.qq.com/cgi-bin/token
