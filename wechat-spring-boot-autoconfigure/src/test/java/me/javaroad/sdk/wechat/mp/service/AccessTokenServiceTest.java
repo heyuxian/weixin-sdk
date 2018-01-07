@@ -6,12 +6,10 @@ import me.javaroad.sdk.wechat.mp.model.AccessToken;
 import me.javaroad.test.BaseSpringTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.IfProfileValue;
 
 /**
  * @author heyx
  */
-@IfProfileValue(name = "spring.profiles.active", value = "test")
 public class AccessTokenServiceTest extends BaseSpringTest {
 
     @Autowired
