@@ -46,7 +46,7 @@ public class WeChatApiRequest {
             }
             if (mpProperties.getLog().getLogPostParam()) {
                 try {
-                    paramJsonString = JsonUtils.jsonString(t);
+                    paramJsonString = JsonUtils.toJson(t);
                 } catch (JsonProcessingException e) {
                     paramJsonString = "convert post param to json failed";
                 }
@@ -70,7 +70,7 @@ public class WeChatApiRequest {
             if (mpProperties.getLog().getLogPostParam()) {
                 try {
                     if (Objects.nonNull(body)) {
-                        paramJsonString = JsonUtils.jsonString(body);
+                        paramJsonString = JsonUtils.toJson(body);
                     }
                 } catch (JsonProcessingException e) {
                     paramJsonString = "convert post param to json failed";
